@@ -1,0 +1,241 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[margin=0.5in]{geometry}
+
+\def\EQ#1\EN{\begin{equation}#1\end{equation}}
+\def\BA#1\EA{\begin{align}#1\end{align}}
+\newcommand{\eq}{\ =\ } 
+\begin{document}
+
+
+\section{Multiphase Dual Continuum}
+\begin{table}[h!]
+\begin{center}
+\caption{List of Variables}
+\begin{tabular}{l | l}
+\textbf{Variable} & \textbf{Description} \\
+\hline
+\textit{j} & primary species \\
+\textit{l} & secondary grid cell \\
+\textit{n} & primary node \\
+\textit{M} & secondary node in contact with primary node \\
+\textit{t} & time \\
+\textit{aq} & aqueous phase \\
+\textit{g} & gas phase \\
+\textit{k} & number secondary continuum \\
+\textit{i} & iteration number \\
+\textit{h} & gas species \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+The residual for the secondary continuum for two-phase,
+
+\BA
+R_{jl} \eq \frac{\varphi V}{\Delta t} (s^{aq}(\Psi_{jl}^{aq,t+\Delta t}-\Psi_{jl}^{aq,t})+s^g(\Psi_{jl}^{g,t+\Delta t}-\Psi_{jl}^{g,t})) + \\
+                         A_{l,l+1}(\Omega_{j,l,l+1}^{aq} + \Omega_{j,l,l+1}^{g})  + \\
+                         A_{l,l-1}(\Omega_{j,l,l-1}^{aq} + \Omega_{j,l,l-1}^{g})  + \\
+                        V_l \sum_m v_{jm}I_{ml}
+\EA
+
+
+\EQ
+\Omega_{j,l,l+1}^{aq} \eq -(\varphi D^{aq})_{l,l+1} \frac{\Psi_{j,l+1}^{aq} - \Psi_{jl}^{aq}} {d_{l+1} + d_l } + q_{l,l+1} \Psi_{j,l,l+1}^{aq}
+\EN
+
+\EQ
+\Omega_{j,l,l+1}^{g} \eq -(\varphi D^g)_{l,l+1} \frac{\Psi_{j,l+1}^{g} - \Psi_{jl}^{g}} {d_{l+1} + d_l } + q_{l,l+1} \Psi_{j,l,l+1}^{g}
+\EN
+
+\EQ
+\Omega_{j,l,l-1}^{aq} \eq -(\varphi D^{aq})_{l,l-1} \frac{\Psi_{jl}^{aq} - \Psi_{j,l-1}^{aq}} {d_l + d_{l-1} } + q_{l,l-1} \Psi_{j,l,l-1}^{aq}
+\EN
+
+\EQ
+\Omega_{j,l,l-1}^g \eq -(\varphi D^g)_{l,l-1} \frac{\Psi_{jl}^g - \Psi_{j,l-1}^g} {d_l + d_{l-1} } + q_{l,l-1} \Psi_{j,l,l-1}^g
+\EN
+
+with boundary conditions in the inner-most boundary,
+
+\EQ
+\Omega_j^{aq} \vert_{\xi\eq0} \eq 0
+\EN
+
+\EQ
+\Omega_j^{g} \vert_{\xi\eq0} \eq 0
+\EN
+
+and Dirichlet condition on boundary in contact with primary node
+\EQ
+    {\Psi_{jM}}^{aq,\beta} \eq {\Psi_{jn}}^{aq,\alpha}
+\EN
+
+\EQ
+    {\Psi_{jM}}^{g,\beta} \eq {\Psi_{jn}}^{g,\alpha}
+\EN
+
+and flux between primary and secondary:
+
+\EQ
+\Omega_{j,n,M}^{aq} \eq -\phi_\beta D_\beta^{aq} \frac {{\Psi_{jn}}^{aq,\alpha} - {\Psi_{j,n,M}}^{aq,\beta} }{{d_M}^\beta}
+\EN
+\EQ
+\Omega_{j,n,M}^{g} \eq -\phi_\beta D_\beta^{g} \frac {{\Psi_{jn}}^{g,\alpha} - {\Psi_{j,n,M}}^{g,\beta} }{{d_M}^\beta}
+\EN
+
+The nonlinear discretized equations are solved using the Newton-Raphson algorithm involving iteration of the linearized equations:
+\EQ
+J^{(i)}\delta x^{(i)} \eq -R^{(i-1)}
+\EN
+
+The Jacobian written in matrix form:
+
+\EQ
+J_{ll'} \eq \frac{\partial R_l}{\partial lnC_{l'}^{aq}} = \beta_{l} \delta_{l-1,l'} + \alpha_{l}\delta_{ll'} + \gamma \delta_{l+1,l'}
+\EN
+
+with coefficients:
+
+\EQ
+(\beta_l)_{jk} \eq  A_{l,l-1}\left[\left( - \frac{\varphi D^{aq}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{aq}}{\partial lnC_{k,l-1}} + \left( - \frac{\varphi D^{g}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{g}}{\partial lnC_{k,l-1}^{aq}} \right]
+\EN
+
+\BA
+(\alpha_l)_{jk} \eq \Bigg[ \frac{\varphi V_l s_{aq}}{\Delta t} + \varphi D^{aq} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg) + q_{l,l+1}A_{l,l+1} ]\frac{\partial\Psi_{jl}^{aq}}{\partial lnC_{kl}^{aq}} \\
+    + \Bigg[ \frac{\varphi V_l s_g}{\Delta t} + \varphi D^{g} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} + 
+  \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg)  + q_{l,l+1}A_{l,l+1} \Bigg] 
+   \frac{\partial\Psi_{jl}^{g}}{\partial lnC_{kl}^{aq}} + \\ V_l \sum_m \nu_{jm} \frac {\partial I_{ml}}{\partial lnC_{kl}^{aq}}
+   \EA
+
+\EQ
+(\gamma_l)_{jk} \eq  A_{l,l+1} \left[\left( - \frac{\varphi D^{aq}}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^{aq}}{\partial lnC_{k,l+1}^{aq}} + \left( - \frac{\varphi D^g}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^g}{\partial lnC_{k,l+1}^{aq}} \right]
+\EN
+
+with derivatives:
+
+\EQ
+\frac{\partial\Psi_{jl}^{aq}}{\partial lnC_{kl}^{aq}} \eq \delta_{jk}C_{jl}^{aq} + \sum_i \nu_{ji}\nu_{ki}C_{il}^{aq}
+\EN
+
+\EQ
+\frac{\partial\Psi_{jl}^g}{\partial lnC_{kl}} \eq \sum_h \widetilde{\nu}_{jh} \widetilde{\nu}_{kh} C_{hl}^g
+\EN
+
+\EQ
+\frac{\partial I_{ml}}{\partial lnC_{kl}} \eq \nu_{km}k_{ml}a_sK_{ml}Q_{ml}
+\EN
+
+Following LU decomposition, the intermediation solution $w_l$ is obtained,
+
+\EQ
+D_1w_1 = r_1
+\EN
+
+\EQ
+D_lw_l = r_l - \beta_lw_{l-1}
+\EN
+ 
+ An explicit expression is obtain for $w_m$ as a function of the primary concentration C as
+ 
+ \BA
+ w_m &= D_M^{-1}(r_M - \beta_Mw_{M-1}) \\
+          &= - D_M^{-1}(\overline{R}_M + \beta_Mw_{M-1}) + D_M^{-1}\frac{\varphi_\beta  A_{\alpha\beta}}{d_M^\beta}(D_\beta^{aq}\Psi_n^{aq,\alpha} + D_\beta^g\Psi_n^{g,\alpha})
+\EA
+
+Where the residual function is written in the form:
+
+\BA
+\begin{split}
+R_{nM} &= \frac{\varphi V_M}{\delta t} \Big[\big(\Psi^{aq,t+\delta t} - \Psi^{aq,t} \big) + \big(\Psi^{g,t+\delta t} - \Psi^{g,t} \big)\Big] \\
+                  & + A_{\alpha\beta} (\Omega_{\alpha\beta}^{aq} + \Omega_{\alpha\beta}^{g}) - A_{M,M-1}(\Omega_{M,M-1}^{aq} + \Omega_{M,M-1}^{g}) \\
+                   & + V_m \sum_m \nu_{jm}I_{mM}^\beta \\
+                   \end{split} \\
+                   \begin{split} 
+              &= \overline{R}_{nM} - \frac{\varphi_\beta A_{\alpha\beta}}{d_M^\beta}(D_\beta^{aq}\Psi_n^{aq,\alpha} + D_\beta^{g}\Psi_n^{g,\alpha})
+              \end{split}
+\EA
+
+Where,
+
+\EQ
+\Omega_{\alpha\beta}^{aq} + \Omega_{\alpha\beta}^{g} \eq - \frac{\varphi_\beta}{d_M^\beta}\Big[D_\beta^{aq}(\Psi_n^{aq,\alpha} - \Psi_M^{aq,\beta}) + D_\beta^{g}(\Psi_n^{g,\alpha} - \Psi_M^{g,\beta}) \Big]
+\EN
+
+The xpression for $w_m$ may be written in the form:
+
+\EQ
+w_M \eq a_n\Psi_n^{aq,\alpha} + c_n\Psi_n^{g,\alpha} + b_n
+\EN
+
+\EQ
+a_n \eq \frac {\varphi_\beta D_\beta^{aq} A_{\alpha\beta}} {d_M} D_M^{-1}
+\EN
+
+\EQ
+c_n \eq \frac {\varphi_\beta D_\beta^{g} A_{\alpha\beta}} {d_M} D_M^{-1}
+\EN
+
+\EQ
+b_n \eq - D_M^{-1}(\overline{R}_M + \beta_Mw_{M-1})
+\EN
+
+Where $w_m$ is determined first by solving the primary continuum equations. For the \textit{i}th iteration:
+
+
+\BA
+C_{jM}^{aq,\beta,i} &= C_{jM}^{aq,\beta,i-1} + w_{jM}^\beta \\
+                         &= C_{jM}^{aq,\beta,{i-1}} + b_{jn} + \sum_k (a_{jkn}\Psi_{kn}^{aq,\alpha} + c_{jkn}\Psi_{kn}^{g,\alpha})
+\EA
+
+with total secondary continuum concentration:
+\EQ
+\Psi_{jM}^{aq,\beta} \eq C_{jM}^{aq,\beta,i} + \sum_i \nu_{ji'}^{aq} C_{i'M}^{aq,\beta,i}
+\EN
+
+\EQ
+\Psi_{jM}^{g,\beta} \eq \sum_h(\nu_{jh}^g+\sum_i \nu_{ji'}^{aq}\nu_{i'h}^g)C_{hM}^{g,\beta,i}
+\EN
+
+with secondary species concentrations from corresponding mass action
+
+\EQ
+C_{i'M}^{aq,\beta,i} = \frac{K_{i'}^{aq}}{\gamma_{i'}^{aq,\beta,i}}\Pi_j (\gamma_{jM}^{aq,\beta,i}C_{jM}^{aq,\beta,i})^{\nu_{ji'}^{aq}}
+\EN
+
+\EQ
+C_{hM}^{g,\beta,i} = \frac{\widetilde{K}_{i'}^{g}}{\gamma_{i'}^g RT} \Pi_j (\gamma_{jM}^{aq,\beta,i} C_{jM}^{aq, \beta,i})^{\widetilde{\nu}_{ji'}^g}
+\EN
+
+The coupling term to the residual and Jacobian can be evaluated
+
+\EQ
+\delta R_{jn}^\alpha = \Gamma ((\Psi_{jn}^{aq,\alpha} + \Psi_{jn}^{g,\alpha}) - (\Psi_{jM}^{aq,\beta}+\Psi_{jM}^{g,\beta}))
+\EN
+
+\EQ
+J_{jkn}^{\alpha} = \Gamma ((\frac{\partial\Psi_{jn}^{aq,\alpha}}{\partial C_{kn}^{aq,\alpha}} + \frac{\partial \Psi_{jn}^{g,\alpha}}{\partial C_{kn}^{aq,\alpha}}) - (\frac{\partial\Psi_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}}+ \frac{\partial\Psi_{jM}^{g,\beta}}{\partial C_{kn}^{aq,\alpha}}))
+\EN
+
+With derivatives when $\alpha \neq \beta$ 
+
+ 
+ \EQ
+ \frac{\partial \Psi_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}} \eq \frac{\partial C_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}} + \sum_{ik'}\nu_{ji}^{aq} \nu_{k'i}^{aq} \frac{1}{C_{k'M}^{aq,\beta}}\frac {\partial C_{k'M}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}} C_{iM}^{\beta}
+ \EN
+ 
+ \EQ
+  \frac{\partial \Psi_{jM}^{g,\beta}}{\partial C_{kn}^{aq,\alpha}}\eq \sum_{ih} \widetilde{\nu}_{ji}^g \widetilde{\nu}_{k'i}^g \frac{1}{C_{k'M}^{aq,\beta}} \frac {\partial C_{k'M}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}} C_{iM}^{g,\beta}
+ \EN
+ 
+ with 
+ \EQ
+ \frac{\partial C_{k'M}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}} \eq \sum_{k'} (a_{jkn}\frac{\partial\Psi_{k'n}^{aq,\alpha}}{\partial C_{kn}^{aq,\alpha}} + c_{jkn}\frac{\partial\Psi_{k'n}^{g,\alpha}}{\partial C_{kn}^{aq,\alpha}})
+\EN
+
+\EQ
+\widetilde{\nu}_{ji}^g \eq (\nu_{jh}^g+\sum_i \nu_{ji'}^{aq}\nu_{i'h}^g)
+\EN
+\end{document}
