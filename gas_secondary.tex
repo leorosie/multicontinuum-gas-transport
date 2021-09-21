@@ -94,38 +94,38 @@ J^{(i)}\delta x^{(i)} \eq -R^{(i-1)}
 The Jacobian written in matrix form:
 
 \EQ
-J_{ll'} \eq \frac{\partial R_l}{\partial lnC_{l'}^{aq}} = \beta_{l} \delta_{l-1,l'} + \alpha_{l}\delta_{ll'} + \gamma \delta_{l+1,l'}
+J_{ll'} \eq \frac{\partial R_l}{\partial C_{l'}^{aq}} = \beta_{l} \delta_{l-1,l'} + \alpha_{l}\delta_{ll'} + \gamma \delta_{l+1,l'}
 \EN
 
 with coefficients:
 
 \EQ
-(\beta_l)_{jk} \eq  A_{l,l-1}\left[\left( - \frac{\varphi D^{aq}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{aq}}{\partial lnC_{k,l-1}} + \left( - \frac{\varphi D^{g}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{g}}{\partial lnC_{k,l-1}^{aq}} \right]
+(\beta_l)_{jk} \eq  A_{l,l-1}\left[\left( - \frac{\varphi D^{aq}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{aq}}{\partial lnC_{k,l-1}} + \left( - \frac{\varphi D^{g}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{g}}{\partial C_{k,l-1}^{aq}} \right]
 \EN
 
 \BA
-(\alpha_l)_{jk} \eq \Bigg[ \frac{\varphi V_l s_{aq}}{\Delta t} + \varphi D^{aq} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg) + q_{l,l+1}A_{l,l+1} ]\frac{\partial\Psi_{jl}^{aq}}{\partial lnC_{kl}^{aq}} \\
+(\alpha_l)_{jk} \eq \Bigg[ \frac{\varphi V_l s_{aq}}{\Delta t} + \varphi D^{aq} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg) + q_{l,l+1}A_{l,l+1} ]\frac{\partial\Psi_{jl}^{aq}}{\partial C_{kl}^{aq}} \\
     + \Bigg[ \frac{\varphi V_l s_g}{\Delta t} + \varphi D^{g} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} + 
   \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg)  + q_{l,l+1}A_{l,l+1} \Bigg] 
-   \frac{\partial\Psi_{jl}^{g}}{\partial lnC_{kl}^{aq}} + \\ V_l \sum_m \nu_{jm} \frac {\partial I_{ml}}{\partial lnC_{kl}^{aq}}
+   \frac{\partial\Psi_{jl}^{g}}{\partial C_{kl}^{aq}} + \\ V_l \sum_m \nu_{jm} \frac {\partial I_{ml}}{\partial lnC_{kl}^{aq}}
    \EA
 
 \EQ
-(\gamma_l)_{jk} \eq  A_{l,l+1} \left[\left( - \frac{\varphi D^{aq}}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^{aq}}{\partial lnC_{k,l+1}^{aq}} + \left( - \frac{\varphi D^g}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^g}{\partial lnC_{k,l+1}^{aq}} \right]
+(\gamma_l)_{jk} \eq  A_{l,l+1} \left[\left( - \frac{\varphi D^{aq}}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^{aq}}{\partial lnC_{k,l+1}^{aq}} + \left( - \frac{\varphi D^g}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^g}{\partial C_{k,l+1}^{aq}} \right]
 \EN
 
 with derivatives:
 
 \EQ
-\frac{\partial\Psi_{jl}^{aq}}{\partial lnC_{kl}^{aq}} \eq \delta_{jk}C_{jl}^{aq} + \sum_i \nu_{ji}\nu_{ki}C_{il}^{aq}
+\frac{\partial\Psi_{jl}^{aq}}{\partial C_{kl}^{aq}} \eq \delta_{jk}C_{jl}^{aq} + \sum_i \nu_{ji}\nu_{ki}C_{il}^{aq}
 \EN
 
 \EQ
-\frac{\partial\Psi_{jl}^g}{\partial lnC_{kl}} \eq \sum_h \widetilde{\nu}_{jh} \widetilde{\nu}_{kh} C_{hl}^g
+\frac{\partial\Psi_{jl}^g}{\partial C_{kl}^{aq}} \eq \sum_h \widetilde{\nu}_{jh} \widetilde{\nu}_{kh} C_{hl}^g
 \EN
 
 \EQ
-\frac{\partial I_{ml}}{\partial lnC_{kl}} \eq \nu_{km}k_{ml}a_sK_{ml}Q_{ml}
+\frac{\partial I_{ml}}{\partial C_{kl}^{aq}} \eq \nu_{km}k_{ml}a_sK_{ml}Q_{ml}
 \EN
 
 Following LU decomposition, the intermediation solution $w_l$ is obtained,
@@ -164,7 +164,7 @@ Where,
 \Omega_{\alpha\beta}^{aq} + \Omega_{\alpha\beta}^{g} \eq - \frac{\varphi_\beta}{d_M^\beta}\Big[D_\beta^{aq}(\Psi_n^{aq,\alpha} - \Psi_M^{aq,\beta}) + D_\beta^{g}(\Psi_n^{g,\alpha} - \Psi_M^{g,\beta}) \Big]
 \EN
 
-The xpression for $w_m$ may be written in the form:
+The expression for $w_m$ may be written in the form:
 
 \EQ
 w_M \eq a_n\Psi_n^{aq,\alpha} + c_n\Psi_n^{g,\alpha} + b_n
@@ -211,15 +211,29 @@ C_{hM}^{g,\beta,i} = \frac{\widetilde{K}_{i'}^{g}}{\gamma_{i'}^g RT} \Pi_j (\gam
 
 The coupling term to the residual and Jacobian can be evaluated
 
-\EQ
-\delta R_{jn}^\alpha = \Gamma ((\Psi_{jn}^{aq,\alpha} + \Psi_{jn}^{g,\alpha}) - (\Psi_{jM}^{aq,\beta}+\Psi_{jM}^{g,\beta}))
-\EN
+\BA
+\delta R_{jn}^\alpha &= ((\Gamma_i^{aq}\Psi_{jn}^{aq,\alpha} + \Gamma_i^{g}\Psi_{jn}^{g,\alpha}) - (\Gamma_i^{aq}\Psi_{jM}^{aq,\beta}+\Gamma_i^{g}\Psi_{jM}^{g,\beta})) \\
+&= \Gamma_i^{aq}(\Psi_{jn}^{aq,\alpha} - \Psi_{jM}^{aq,\beta}) + \Gamma_i^{g}(\Psi_{jn}^{g,\alpha} - \Psi_{jM}^{g,\beta})
+\EA
+
+\BA
+J_{jkn}^{\alpha} &= ((\Gamma_i^{aq}\frac{\partial\Psi_{jn}^{aq,\alpha}}{\partial C_{kn}^{aq,\alpha}} + \Gamma_i^{g}\frac{\partial \Psi_{jn}^{g,\alpha}}{\partial C_{kn}^{aq,\alpha}}) - (\Gamma_i^{aq}\frac{\partial\Psi_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}}+ \Gamma_i^{g}\frac{\partial\Psi_{jM}^{g,\beta}}{\partial C_{kn}^{aq,\alpha}})) \\
+&= \Gamma_i^{aq} (\frac{\partial\Psi_{jn}^{aq,\alpha}}{\partial C_{kn}^{aq,\alpha}} - \frac{\partial\Psi_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}}) + \Gamma_i^{g}(\frac{\partial \Psi_{jn}^{g,\alpha}}{\partial C_{kn}^{aq,\alpha}} - \frac{\partial\Psi_{jM}^{g,\beta}}{\partial C_{kn}^{aq,\alpha}})
+\EA
+
+Where $\Gamma_i^{aq}$ is,
 
 \EQ
-J_{jkn}^{\alpha} = \Gamma ((\frac{\partial\Psi_{jn}^{aq,\alpha}}{\partial C_{kn}^{aq,\alpha}} + \frac{\partial \Psi_{jn}^{g,\alpha}}{\partial C_{kn}^{aq,\alpha}}) - (\frac{\partial\Psi_{jM}^{aq,\beta}}{\partial C_{kn}^{aq,\alpha}}+ \frac{\partial\Psi_{jM}^{g,\beta}}{\partial C_{kn}^{aq,\alpha}}))
+\Gamma_i^{aq} \eq \frac{\varphi A_{if}D^{aq}V_n}{d}
 \EN
 
-With derivatives when $\alpha \neq \beta$ 
+and $\Gamma_i^{g}$ is,
+
+\EQ
+\Gamma_i^{g} \eq \frac{\varphi A_{if}D^{g}V_n}{d}
+\EN
+  
+Where $A_{if}$ is the interfacial area and with derivatives when $\alpha \neq \beta$ 
 
  
  \EQ
