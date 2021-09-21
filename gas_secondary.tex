@@ -100,18 +100,18 @@ J_{ll'} \eq \frac{\partial R_l}{\partial C_{l'}^{aq}} = \beta_{l} \delta_{l-1,l'
 with coefficients:
 
 \EQ
-(\beta_l)_{jk} \eq  A_{l,l-1}\left[\left( - \frac{\varphi D^{aq}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{aq}}{\partial lnC_{k,l-1}} + \left( - \frac{\varphi D^{g}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{g}}{\partial C_{k,l-1}^{aq}} \right]
+(\beta_l)_{jk} \eq  A_{l,l-1}\left[\left( - \frac{\varphi D^{aq}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{aq}}{\partial C_{k,l-1}} + \left( - \frac{\varphi D^{g}}{d_l + d_{l-1}} - q_{l,l-1} \right)\frac {\partial\Psi_{j,l-1}^{g}}{\partial C_{k,l-1}^{aq}} \right]
 \EN
 
 \BA
 (\alpha_l)_{jk} \eq \Bigg[ \frac{\varphi V_l s_{aq}}{\Delta t} + \varphi D^{aq} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg) + q_{l,l+1}A_{l,l+1} ]\frac{\partial\Psi_{jl}^{aq}}{\partial C_{kl}^{aq}} \\
     + \Bigg[ \frac{\varphi V_l s_g}{\Delta t} + \varphi D^{g} \bigg( \frac{A_{l,l+1}}{d_{l+1} + d_l} + 
   \frac{A_{l,l-1}}{d_l + d_{l-1}} \bigg)  + q_{l,l+1}A_{l,l+1} \Bigg] 
-   \frac{\partial\Psi_{jl}^{g}}{\partial C_{kl}^{aq}} + \\ V_l \sum_m \nu_{jm} \frac {\partial I_{ml}}{\partial lnC_{kl}^{aq}}
+   \frac{\partial\Psi_{jl}^{g}}{\partial C_{kl}^{aq}} + \\ V_l \sum_m \nu_{jm} \frac {\partial I_{ml}}{\partial C_{kl}^{aq}}
    \EA
 
 \EQ
-(\gamma_l)_{jk} \eq  A_{l,l+1} \left[\left( - \frac{\varphi D^{aq}}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^{aq}}{\partial lnC_{k,l+1}^{aq}} + \left( - \frac{\varphi D^g}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^g}{\partial C_{k,l+1}^{aq}} \right]
+(\gamma_l)_{jk} \eq  A_{l,l+1} \left[\left( - \frac{\varphi D^{aq}}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^{aq}}{\partial C_{k,l+1}^{aq}} + \left( - \frac{\varphi D^g}{d_{l+1} + d_l} + q_{l,l+1} \right) \frac{\partial\Psi_{j,l+1}^g}{\partial C_{k,l+1}^{aq}} \right]
 \EN
 
 with derivatives:
@@ -126,6 +126,18 @@ with derivatives:
 
 \EQ
 \frac{\partial I_{ml}}{\partial C_{kl}^{aq}} \eq \nu_{km}k_{ml}a_sK_{ml}Q_{ml}
+\EN
+
+
+The Jacobian with respect to the log concentration is:
+\EQ
+J^{(i)}_\textit{ln} \delta \ln x^{(i)} \eq -R^{(i-1)}
+\EN
+
+In matrix form:
+
+\EQ
+J_{\textit{ln},ll'} \eq C_{l'}^{aq}\frac{\partial R_l}{\partial C_{l'}^{aq}} = C_{l'}^{aq}\left(\beta_{l} \delta_{l-1,l'} + \alpha_{l}\delta_{ll'} + \gamma \delta_{l+1,l'}\right)
 \EN
 
 Following LU decomposition, the intermediation solution $w_l$ is obtained,
